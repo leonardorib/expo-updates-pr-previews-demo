@@ -1,6 +1,6 @@
 {
   "name": "ExpoUpdatesDemo",
-  "displayName": "ExpoUpdatesDemo",
+  "slug": "expoupdatesdemo",
   "extra": {
     "eas": {
       "projectId": "1d8dc04a-37bb-4990-9d86-15c0545f2c0e"
@@ -9,7 +9,5 @@
   "runtimeVersion": "1.0.0",
   "updates": {
     "url": "https://u.expo.dev/1d8dc04a-37bb-4990-9d86-15c0545f2c0e"
-  },
-  "android": {},
-  "ios": {}
+  }
 }
