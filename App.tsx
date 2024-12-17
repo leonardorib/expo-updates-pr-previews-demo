@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {
   Alert,
@@ -9,12 +9,47 @@ import {
   StyleSheet,
   Text,
   View,
+  Linking,
 } from 'react-native';
 
 import * as Updates from 'expo-updates';
 
 function App(): React.JSX.Element {
   const {currentlyRunning} = Updates.useUpdates();
+  const [lastLinkingUrl, setLastLinkingUrl] = React.useState<string | null>(
+    null,
+  );
+
+  const getInitialUrl = async () => {
+    try {
+      setLastLinkingUrl('...');
+      const url = await Linking.getInitialURL();
+      console.log('Initial URL:', url);
+
+      setLastLinkingUrl(url);
+
+      return url;
+    } catch (error: any) {
+      setLastLinkingUrl(null);
+      Alert.alert('getInitialUrl ERROR', error.message ?? error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    getInitialUrl();
+  }, []);
+
+  useEffect(() => {
+    const subscription = Linking.addEventListener('url', event => {
+      console.log('Linking event:', event);
+      setLastLinkingUrl(event.url);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
   return (
     <SafeAreaView style={styles.backgroundStyle}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
@@ -27,7 +62,10 @@ function App(): React.JSX.Element {
             Should be visible in the titoflow manual branch
             da1a0698-6d91-4365-846d-2c467f827611. The base branch.
           </Text> */}
-          <Text style={styles.titleText}>Expo Updates Constants</Text>
+          <Text style={styles.titleText}>Debug Info</Text>
+          <Text style={styles.regularText}>
+            Last linking URL: {`${lastLinkingUrl}`}
+          </Text>
           <Text style={styles.regularText}>
             Updates.isEnabled: {`${Updates.isEnabled}`}
           </Text>
@@ -51,7 +89,19 @@ function App(): React.JSX.Element {
         <View style={styles.spacer} />
 
         <View style={styles.section}>
-          <Text style={styles.titleText}>Expo Updates Methods</Text>
+          <Text style={styles.titleText}>Methods</Text>
+
+          <Button
+            title="Linking.getInitialUrl"
+            onPress={async () => {
+              try {
+                const url = await Linking.getInitialURL();
+                Alert.alert('getInitialUrl', `${url}`);
+              } catch (error: any) {
+                Alert.alert('getInitialUrl ERROR', error.message ?? error);
+              }
+            }}
+          />
 
           <Button
             title="currentlyRunning"
