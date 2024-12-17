@@ -44,6 +44,6 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
       - name: Deploy Branch to Expo Updates
-        run: eas update eas update --branch $EXPO_UPDATES_BRANCH
+        run: eas update --branch $EXPO_UPDATES_BRANCH
       - name: Update Branch Mappings
         run: npx tsx ci-scripts/updateExpoUpdatesBranchMappings.ts
