@@ -23,6 +23,10 @@ function App(): React.JSX.Element {
         style={styles.backgroundStyle}
         contentContainerStyle={styles.scrollContentContainer}>
         <View style={styles.section}>
+          {/* <Text style={styles.regularText}>
+            Should be visible in the titoflow manual branch
+            da1a0698-6d91-4365-846d-2c467f827611. The base branch.
+          </Text> */}
           <Text style={styles.titleText}>Expo Updates Constants</Text>
           <Text style={styles.regularText}>
             Updates.isEnabled: {`${Updates.isEnabled}`}
@@ -155,6 +159,30 @@ function App(): React.JSX.Element {
                   'getExtraParamsAsync ERROR',
                   error.message ?? error,
                 );
+              }
+            }}
+          />
+
+          <Button
+            title="setExtraParamsAsync - branch-override: test-1"
+            onPress={async () => {
+              try {
+                await Updates.setExtraParamAsync('branch-override', 'test-1');
+                Alert.alert('Success', 'branch-override is now test-1');
+              } catch (error: any) {
+                Alert.alert('setExtraParamAsync ERROR', error.message ?? error);
+              }
+            }}
+          />
+
+          <Button
+            title="setExtraParamsAsync - unset branch-override"
+            onPress={async () => {
+              try {
+                await Updates.setExtraParamAsync('branch-override', null);
+                Alert.alert('Success', 'branch-override is now removed');
+              } catch (error: any) {
+                Alert.alert('setExtraParamAsync ERROR', error.message ?? error);
               }
             }}
           />
