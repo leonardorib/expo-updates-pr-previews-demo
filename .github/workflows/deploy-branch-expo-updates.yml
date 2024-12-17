@@ -1,0 +1,49 @@
+name: Deploy Branch to Expo Updates
+
+on:
+  pull_request:
+    branches-ignore:
+      - staging
+      - production
+    types: [opened, synchronize, ready_for_review, reopened]
+  workflow_dispatch:
+env:
+  EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+jobs:
+  deploy_branch_expo_updates:
+    name: Deploy Branch to Expo Updates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Set Variables
+        run: |
+          echo "CHANNEL=titoflowmanual" >> $GITHUB_ENV
+          GIT_BRANCH=${{ github.head_ref || github.ref_name }}
+          echo "GIT_BRANCH=$GIT_BRANCH" >> $GITHUB_ENV
+          echo "EXPO_UPDATES_BRANCH=pr-${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set git config
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Install JavaSript dependencies with Yarn
+        run: yarn install
+      - name: 🏗 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Deploy Branch to Expo Updates
+        run: eas update eas update --branch $EXPO_UPDATES_BRANCH
+      - name: Update Branch Mappings
+        run: npx tsx ci-scripts/updateExpoUpdatesBranchMappings.ts
