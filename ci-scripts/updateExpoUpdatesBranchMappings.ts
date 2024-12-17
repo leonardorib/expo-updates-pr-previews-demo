@@ -65,7 +65,7 @@ const main = async () => {
 
     console.log('Fetching EAS CHANNEL...');
     const channelJsonString = (await execCommand(
-      `eas channel:view ${EXPO_UPDATES_CHANNEL} test --json --non-interactive`,
+      `eas channel:view ${EXPO_UPDATES_CHANNEL} --json --non-interactive`,
     )) as string;
 
     const channelData: ChannelViewResponse = JSON.parse(channelJsonString);
