@@ -101,6 +101,11 @@ const main = async () => {
       },
     });
 
+    console.log(
+      'Updated channel branch mapping:',
+      JSON.stringify(channelBranchMapping, null, 2),
+    );
+
     // TODO - Submit graphql request to update the branch mapping
   } catch (error) {
     console.error('An error occurred:', error);
