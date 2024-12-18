@@ -96,7 +96,25 @@ const main = async () => {
       JSON.stringify(branchData, null, 2),
     );
 
-    // Modify the branch mapping
+    // Existing branch override for the current branch
+    const branchOverrideForCurrentBranch = channelBranchMapping.data.findIndex(
+      item => {
+        const isBranchOverride =
+          typeof item.branchMappingLogic !== 'string' &&
+          item.branchMappingLogic.clientKey === 'branch-override';
+
+        const isCurrentBranch = item.branchId === branchData.id;
+
+        return isBranchOverride && isCurrentBranch;
+      },
+    );
+
+    // Removes existing branch override for the current branch if it exists
+    if (branchOverrideForCurrentBranch > -1) {
+      channelBranchMapping.data.splice(branchOverrideForCurrentBranch, 1);
+    }
+
+    // Adds a branch override for the current branch on top of the list
     channelBranchMapping.data.unshift({
       branchId: branchData.id,
       branchMappingLogic: {
@@ -112,9 +130,6 @@ const main = async () => {
     );
 
     const branchMappingString = JSON.stringify(channelBranchMapping);
-
-    // By stringifying twice, we get the escaped version of the JSON string
-    const branchMappingEscapedString = JSON.stringify(branchMappingString);
 
     const graphqlMutation = `
       mutation AddBranchMapping($channelId: ID!, $branchMapping: String!) {
@@ -132,7 +147,7 @@ const main = async () => {
         query: graphqlMutation,
         variables: {
           channelId: channelData.currentPage.id,
-          branchMapping: branchMappingEscapedString,
+          branchMapping: branchMappingString,
         },
       },
       {
@@ -143,9 +158,28 @@ const main = async () => {
       },
     );
 
-    console.log('Branch mapping updated successfully:', result.data);
+    // The request can return errors even with a successful status code
+    // So we check for errors in the response data
+    if (result.data.errors) {
+      throw new Error(
+        `An error occurred: ${JSON.stringify(result.data.errors, null, 2)}`,
+      );
+    }
+
+    console.log(
+      'Branch mapping updated successfully:',
+      JSON.stringify(result.data, null, 2),
+    );
   } catch (error) {
-    console.error('An error occurred:', error);
+    if (axios.isAxiosError(error)) {
+      console.error(
+        'Axios error:',
+        error.response?.data ?? error.message ?? error,
+      );
+    } else {
+      console.error('An error occurred:', error);
+    }
+
     process.exit(1); // Exit with failure
   }
 };
