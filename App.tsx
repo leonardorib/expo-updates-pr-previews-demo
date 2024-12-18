@@ -12,6 +12,8 @@ import {
   Linking,
 } from 'react-native';
 
+import urlParse from 'url-parse';
+
 import * as Updates from 'expo-updates';
 
 function App(): React.JSX.Element {
@@ -40,10 +42,47 @@ function App(): React.JSX.Element {
     getInitialUrl();
   }, []);
 
+  const handleExpoUpdatesLink = async (deepLink: string) => {
+    try {
+      const parsedUrl = urlParse(deepLink, true);
+
+      const {expoUpdatesBranch} = parsedUrl.query;
+
+      if (!expoUpdatesBranch) {
+        return;
+      }
+
+      console.log('expoUpdatesBranch', expoUpdatesBranch);
+
+      if (__DEV__) {
+        Alert.alert(
+          'Development Mode',
+          `We can't handle your update link for ${expoUpdatesBranch} in development mode.`,
+        );
+
+        return;
+      }
+
+      await Updates.setExtraParamAsync('branch-override', expoUpdatesBranch);
+
+      await Updates.fetchUpdateAsync();
+
+      await Updates.reloadAsync();
+    } catch (error: any) {
+      console.error('handleExpoUpdatesLink ERROR:', error.message ?? error);
+      Alert.alert('handleExpoUpdatesLink ERROR', error.message ?? error);
+    }
+  };
+
   useEffect(() => {
     const subscription = Linking.addEventListener('url', event => {
       console.log('Linking event:', event);
-      setLastLinkingUrl(event.url);
+      const url = event.url;
+      setLastLinkingUrl(url);
+
+      if (url?.includes('expo-updates-preview')) {
+        handleExpoUpdatesLink(url);
+      }
     });
 
     return () => {
