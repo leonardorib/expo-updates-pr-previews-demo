@@ -63,6 +63,11 @@ const main = async () => {
       throw new Error('EXPO_UPDATES_BRANCH environment variable is not set.');
     }
 
+    const EXPO_TOKEN = process.env.EXPO_TOKEN;
+    if (!EXPO_TOKEN) {
+      throw new Error('EXPO_TOKEN environment variable is not set.');
+    }
+
     console.log('Fetching EAS CHANNEL...');
     const channelJsonString = (await execCommand(
       `eas channel:view ${EXPO_UPDATES_CHANNEL} --json --non-interactive`,
@@ -106,7 +111,39 @@ const main = async () => {
       JSON.stringify(channelBranchMapping, null, 2),
     );
 
-    // TODO - Submit graphql request to update the branch mapping
+    const branchMappingString = JSON.stringify(channelBranchMapping);
+
+    // By stringifying twice, we get the escaped version of the JSON string
+    const branchMappingEscapedString = JSON.stringify(branchMappingString);
+
+    const graphqlMutation = `
+      mutation AddBranchMapping($channelId: ID!, $branchMapping: String!) {
+        updateChannel {
+          editUpdateChannel(channelId: $channelId, branchMapping: $branchMapping) {
+            id
+          }
+        }
+      }
+    `;
+
+    const result = await axios.post(
+      'https://api.expo.dev/graphql',
+      {
+        query: graphqlMutation,
+        variables: {
+          channelId: channelData.currentPage.id,
+          branchMapping: branchMappingEscapedString,
+        },
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${EXPO_TOKEN}`,
+        },
+      },
+    );
+
+    console.log('Branch mapping updated successfully:', result.data);
   } catch (error) {
     console.error('An error occurred:', error);
     process.exit(1); // Exit with failure
