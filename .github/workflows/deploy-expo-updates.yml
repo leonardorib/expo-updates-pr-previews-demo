@@ -44,5 +44,5 @@ jobs:
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
-      - name: Deployto Expo Updates
+      - name: Deploy to Expo Updates
         run: eas update --branch $EXPO_UPDATES_BRANCH --message "Updating from Github Actions"

@@ -1,4 +1,4 @@
-name: Deploy Branch to Expo Updates
+name: Deploy Feature Branch to Expo Updates
 
 on:
   pull_request:
@@ -43,7 +43,7 @@ jobs:
         run: corepack enable
       - name: Install JavaSript dependencies with Yarn
         run: yarn install
-      - name: Setup EAS
+      - name: Setup Expo EAS
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
