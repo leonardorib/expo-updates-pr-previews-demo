@@ -97,11 +97,15 @@ function App(): React.JSX.Element {
         style={styles.backgroundStyle}
         contentContainerStyle={styles.scrollContentContainer}>
         <View style={styles.section}>
-          {/* <Text style={styles.regularText}>
-            Should be visible in the titoflow manual branch
-            da1a0698-6d91-4365-846d-2c467f827611. The base branch.
-          </Text> */}
           <Text style={styles.titleText}>Debug Info</Text>
+          <Text
+            style={StyleSheet.flatten([
+              styles.regularText,
+              styles.greenBoldText,
+              styles.centerText,
+            ])}>
+            This green text should only be visible in the PR preview.
+          </Text>
           <Text style={styles.regularText}>
             Last linking URL: {`${lastLinkingUrl}`}
           </Text>
@@ -302,6 +306,13 @@ const styles = StyleSheet.create({
   regularText: {
     fontSize: 16,
     color: 'black',
+  },
+  greenBoldText: {
+    color: 'green',
+    fontWeight: 'bold',
+  },
+  centerText: {
+    textAlign: 'center',
   },
   scrollContentContainer: {
     flexGrow: 1,
