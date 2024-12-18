@@ -28,6 +28,8 @@ jobs:
           GIT_BRANCH=${{ github.head_ref || github.ref_name }}
           echo "GIT_BRANCH=$GIT_BRANCH" >> $GITHUB_ENV
           echo "EXPO_UPDATES_BRANCH=pr-${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          echo "APP_SCHEME_IOS=expoupdatesdemo" >> $GITHUB_ENV
+          echo "APP_SCHEME_ANDROID=expoupdatesdemo" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set git config
@@ -47,3 +49,54 @@ jobs:
         run: eas update --branch $EXPO_UPDATES_BRANCH --message "Updating from Github Actions"
       - name: Update Branch Mappings
         run: npx tsx ci-scripts/updateExpoUpdatesBranchMappings.ts
+      - name: Generate QR codes and comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+
+            for (const comment of comments) {
+              if (!comment.body.includes("New build is available on Expo Updates")) {
+                continue;
+              }
+
+              await github.rest.issues.deleteComment({
+                comment_id: comment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              });
+            }
+
+
+            const expoUpdateDeepLinkIos = `${process.env.APP_SCHEME_IOS}://expo-updates-preview?expoUpdatesBranch%3D${process.env.EXPO_UPDATES_BRANCH}`;
+            const expoUpdateDeepLinkAndroid = `${process.env.APP_SCHEME_ANDROID}://expo-updates-preview?expoUpdatesBranch%3D${process.env.EXPO_UPDATES_BRANCH}`;
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: [
+                "# New build is available on CodePush!",
+                "",
+                `iOS Deep Link: ${expoUpdateDeepLinkIos}`,
+                "",
+                "Android Deep Link: ${expoUpdateDeepLinkAndroid}",
+                [
+                  `[![iOS QRCode](https://img.shields.io/badge/iOS-grey?style=for-the-badge&logo=apple&logoColor=white)](${expoUpdateDeepLinkIos}) `,
+                  " ",
+                  " ",
+                  ` [![Android QRCode](https://img.shields.io/badge/Android-brightgreen?style=for-the-badge&logo=android&logoColor=white)](${expoUpdateDeepLinkAndroid})`,
+                ].join("|"),
+                ":-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:",
+                [
+                  `![iOS Deep Link QRCode](https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${expoUpdateDeepLinkIos}) `,
+                  " ",
+                  " ",
+                  ` ![Android Deep Link QRCode](https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${expoUpdateDeepLinkAndroid})`,
+                ].join("|"),
+              ].join("\n"),
+            });
