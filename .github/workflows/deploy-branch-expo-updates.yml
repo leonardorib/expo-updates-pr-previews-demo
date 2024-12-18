@@ -13,6 +13,9 @@ jobs:
   deploy_branch_expo_updates:
     name: Deploy Branch to Expo Updates
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.1
