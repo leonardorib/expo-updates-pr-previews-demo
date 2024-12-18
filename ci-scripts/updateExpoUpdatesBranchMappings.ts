@@ -52,12 +52,15 @@ interface BranchViewResponse {
   currentPage: any[]; // Not using it for now. No need to define the structure.
 }
 
-const EXPO_UPDATES_CHANNEL = 'titoflowmanual';
-
 // Main async function
 const main = async () => {
   try {
     console.log('Running updateExpoUpdatesBranchMappings');
+    const EXPO_UPDATES_CHANNEL = process.env.EXPO_UPDATES_CHANNEL;
+    if (!EXPO_UPDATES_CHANNEL) {
+      throw new Error('EXPO_UPDATES_CHANNEL environment variable is not set.');
+    }
+
     const EXPO_UPDATES_BRANCH = process.env.EXPO_UPDATES_BRANCH;
     if (!EXPO_UPDATES_BRANCH) {
       throw new Error('EXPO_UPDATES_BRANCH environment variable is not set.');

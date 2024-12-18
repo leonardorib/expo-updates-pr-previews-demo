@@ -27,7 +27,7 @@ jobs:
           node-version: 20
       - name: Set Variables
         run: |
-          echo "CHANNEL=titoflowmanual" >> $GITHUB_ENV
+          echo "EXPO_UPDATES_CHANNEL=main" >> $GITHUB_ENV
           GIT_BRANCH=${{ github.head_ref || github.ref_name }}
           echo "GIT_BRANCH=$GIT_BRANCH" >> $GITHUB_ENV
           echo "EXPO_UPDATES_BRANCH=pr-${{ github.event.pull_request.number }}" >> $GITHUB_ENV
@@ -43,7 +43,7 @@ jobs:
         run: corepack enable
       - name: Install JavaSript dependencies with Yarn
         run: yarn install
-      - name: 🏗 Setup EAS
+      - name: Setup EAS
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest

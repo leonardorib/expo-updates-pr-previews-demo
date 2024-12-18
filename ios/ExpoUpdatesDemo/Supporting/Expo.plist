@@ -20,7 +20,7 @@
     <key>EXUpdatesRequestHeaders</key>
     <dict>
       <key>expo-channel-name</key>
-      <string>titoflowmanual</string>
+      <string>main</string>
     </dict>
   </dict>
 </plist>
