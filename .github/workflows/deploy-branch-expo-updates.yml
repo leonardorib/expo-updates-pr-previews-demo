@@ -75,19 +75,19 @@ jobs:
             }
 
 
-            const expoUpdateDeepLinkIos = `${process.env.APP_SCHEME_IOS}://expo-updates-preview?expoUpdatesBranch%3D${process.env.EXPO_UPDATES_BRANCH}`;
-            const expoUpdateDeepLinkAndroid = `${process.env.APP_SCHEME_ANDROID}://expo-updates-preview?expoUpdatesBranch%3D${process.env.EXPO_UPDATES_BRANCH}`;
+            const expoUpdateDeepLinkIos = `${process.env.APP_SCHEME_IOS}://expo-updates-preview?expoUpdatesBranch=${process.env.EXPO_UPDATES_BRANCH}`;
+            const expoUpdateDeepLinkAndroid = `${process.env.APP_SCHEME_ANDROID}://expo-updates-preview?expoUpdatesBranch=${process.env.EXPO_UPDATES_BRANCH}`;
 
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: [
-                "# New build is available on CodePush!",
+                "# New build is available on Expo Updates!",
                 "",
                 `iOS Deep Link: ${expoUpdateDeepLinkIos}`,
                 "",
-                "Android Deep Link: ${expoUpdateDeepLinkAndroid}",
+                `Android Deep Link: ${expoUpdateDeepLinkAndroid}`,
                 [
                   `[![iOS QRCode](https://img.shields.io/badge/iOS-grey?style=for-the-badge&logo=apple&logoColor=white)](${expoUpdateDeepLinkIos}) `,
                   " ",
