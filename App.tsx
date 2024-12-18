@@ -97,6 +97,7 @@ function App(): React.JSX.Element {
         style={styles.backgroundStyle}
         contentContainerStyle={styles.scrollContentContainer}>
         <View style={styles.section}>
+          <Text style={styles.titleText}>Debug Info</Text>
           <Text
             style={[
               styles.regularText,
@@ -104,7 +105,6 @@ function App(): React.JSX.Element {
             ]}>
             Should be visible in the testing-4 branch PR preview.
           </Text>
-          <Text style={styles.titleText}>Debug Info</Text>
           <Text style={styles.regularText}>
             Last linking URL: {`${lastLinkingUrl}`}
           </Text>
