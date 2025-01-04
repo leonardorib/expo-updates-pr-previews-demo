@@ -97,11 +97,14 @@ function App(): React.JSX.Element {
         style={styles.backgroundStyle}
         contentContainerStyle={styles.scrollContentContainer}>
         <View style={styles.section}>
-          {/* <Text style={styles.regularText}>
-            Should be visible in the titoflow manual branch
-            da1a0698-6d91-4365-846d-2c467f827611. The base branch.
-          </Text> */}
           <Text style={styles.titleText}>Debug Info</Text>
+          <Text
+            style={[
+              styles.regularText,
+              {textAlign: 'center', color: 'green', fontWeight: 'bold'},
+            ]}>
+            Should be visible in the testing-4 branch PR preview.
+          </Text>
           <Text style={styles.regularText}>
             Last linking URL: {`${lastLinkingUrl}`}
           </Text>
