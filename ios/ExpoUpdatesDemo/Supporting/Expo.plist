@@ -12,11 +12,11 @@
     <string>ON_LOAD</string>
     <key>EXUpdatesLaunchWaitMs</key>
     <!-- Default:  <integer>0</integer> -->
-    <integer>60000</integer>
+    <integer>0</integer>
     <key>EXUpdatesURL</key>
     <string>https://u.expo.dev/1d8dc04a-37bb-4990-9d86-15c0545f2c0e</string>
     <key>EXUpdatesRuntimeVersion</key>
-    <string>1.1.0</string>
+    <string>1.2.0</string>
     <key>EXUpdatesRequestHeaders</key>
     <dict>
       <key>expo-channel-name</key>
