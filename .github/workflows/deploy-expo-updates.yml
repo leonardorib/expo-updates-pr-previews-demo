@@ -5,12 +5,12 @@ name: Deploy main branches to Expo Updates
 # Controls when the action will run. Triggers the workflow on push or pull request
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - 'ci-scripts/updateExpoUpdatesBranchMappings.ts'
-      - '**.md'
+  # push:
+  #   branches:
+  #     - main
+  #   paths-ignore:
+  #     - 'ci-scripts/updateExpoUpdatesBranchMappings.ts'
+  #     - '**.md'
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
