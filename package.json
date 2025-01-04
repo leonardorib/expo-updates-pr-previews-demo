@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "release-ios": "npx react-native run-ios --simulator \"iPhone 16 Plus\" --mode \"Release\""
+    "release-ios": "npx react-native run-ios --simulator \"iPhone 16 Plus\" --mode \"Release\"",
+    "release-ios-device": "npx react-native run-ios --device \"00008110-000539C83489A01E\" --mode \"Release\""
   },
   "dependencies": {
     "expo": "^52.0.0",
