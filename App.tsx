@@ -105,6 +105,11 @@ function App(): React.JSX.Element {
           <Text style={styles.regularText}>
             Last linking URL: {`${lastLinkingUrl}`}
           </Text>
+
+          <Text style={styles.regularText}>
+            Updates.runtimeVersion: {`${Updates.runtimeVersion}`}
+          </Text>
+
           <Text style={styles.regularText}>
             Updates.isEnabled: {`${Updates.isEnabled}`}
           </Text>
